@@ -1,44 +1,7 @@
 const axios = require('axios');
 const { token } = require('./config.json');
-
-// Function to fetch the guilds (servers) you're in
-async function getGuilds() {
-  try {
-    const response = await axios.get('https://discord.com/api/v9/users/@me/guilds', {
-      headers: {
-        'Authorization': {token},
-        'Content-Type': 'application/json',
-      },
-    });
-
-    return response.data.map(guild => guild.id);
-  } catch (error) {
-    console.error('Error fetching guilds:', error.message);
-    return [];
-  }
-}
-
-// Function to mute a specific server
-async function muteServer(serverId) {
-  try {
-    const response = await axios.patch(
-      `https://discord.com/api/v9/users/@me/guilds/${serverId}/settings`,
-      { 'muted': true },
-      {
-        headers: {
-          'Authorization': token,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-
-    console.log(response.data.guild_id, 'has been muted');
-  } catch (error) {
-    console.error('Error muting server:', error.message);
-  }
-}
-
-// Function to mute all servers
+const getGuilds = require('./src/getGuilds')
+const muteServer = require('./src/muteServer')
 async function muteAllServers() {
   const servers = await getGuilds();
 
